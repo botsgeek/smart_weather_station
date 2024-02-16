@@ -60,3 +60,12 @@ start debugging
 - click on `Reveal in File explorer `, the file manager should open
 - double click on the same file ending in ioc, it should open in CubeMX if you have it installed, the you can make the
  the necessary chamges from GUI. Alternatively, you can make the chnages from code.
+
+## Using printf
+
+- printf is now routed to USART1 on PIN A9 and A10
+- See below diagram for connection guide
+
+![alt text](STM32-to-Serial.drawio.png)
+
+- To turnoff printf entirely goto file `STM32-for-VSCode.config.yaml`  and remove `- -DDEBUG` under cFlags
