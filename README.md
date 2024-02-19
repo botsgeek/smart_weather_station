@@ -69,3 +69,19 @@ start debugging
 ![alt text](STM32-to-Serial.drawio.png)
 
 - To turnoff printf entirely goto file `STM32-for-VSCode.config.yaml`  and remove `- -DDEBUG` under cFlags
+
+
+## Build with docker
+
+- Run `bash generate_docker.sh` , this will build the docker image
+- Run `bash build.sh clean` , this will clean the build directory by removing the binaries
+- Run `bash build.sh debug` , this will build the project using the Makefile within the project directory
+
+### Debugging with the image generated from Docker
+
+-click run and debug option at the left options on vscode, then click the little play buttton beside the `Vanilla Debug STM32` option to start debugging, if you don't see the `Vanilla Debug STM` you may have to click the drop by the selection to select it
+from the option.
+
+![alt text](image-8.png)
+
+
