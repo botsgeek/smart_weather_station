@@ -85,3 +85,7 @@ from the option.
 ![alt text](image-8.png)
 
 
+# Datasheets
+
+- AM2302 (DHT22) datasheet [link](https://cdn-shop.adafruit.com/datasheets/Digital+humidity+and+temperature+sensor+AM2302.pdf)
+
