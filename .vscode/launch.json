@@ -27,6 +27,20 @@
             "configFiles": [
                 "openocd.cfg"
             ]
+        },
+        {
+            "showDevDebugOutput": "parsed",
+            "cwd": "${workspaceRoot}",
+            "executable": "./build/smart_weather_station.elf",
+            "name": "Vanilla Debug STM32",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device": "stm32f411xe.s",
+            "configFiles": [
+                "openocd.cfg"
+            ],
+            "runToMain": true,
         }
     ]
 }
