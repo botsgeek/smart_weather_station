@@ -1,6 +1,16 @@
-![alt text](image.png)
+![alt text](<weather_station-Page-1.drawio (1).png>)
 
 Above is the block diagram for the project 
+
+# How to contribute to project
+
+- git checkout main
+- git pull
+- git checkout ticket-<name-of-task>
+- git push - origin ticket-<name-of-task>
+- continue to work on local branch
+- when done do "git push" to push your code to the repo
+- create pull request to allow your work to be merged to main branch
 
 # Setting Up 
 
@@ -88,4 +98,6 @@ from the option.
 # Datasheets
 
 - AM2302 (DHT22) datasheet [link](https://cdn-shop.adafruit.com/datasheets/Digital+humidity+and+temperature+sensor+AM2302.pdf)
+
+
 
