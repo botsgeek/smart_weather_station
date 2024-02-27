@@ -89,3 +89,6 @@ from the option.
 
 - AM2302 (DHT22) datasheet [link](https://cdn-shop.adafruit.com/datasheets/Digital+humidity+and+temperature+sensor+AM2302.pdf)
 
+#### Interface for the ESP32 WiFi is on the UART rather than the SPI, The reason for this is that the QSPI and SDIO SPI based interface use 7 and 6(or5) pins respectively and there is no luxury of GPIOs in the project, based on the chosen MCU.
+
+
