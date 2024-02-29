@@ -17,6 +17,7 @@
  */
 #include <stdio.h>
 #include <dht22.h>
+#include <esp32_chat.h>
 #include <common_headers.h>
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
@@ -43,9 +44,11 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
-TIM_HandleTypeDef htim3;
+UART_HandleTypeDef huart2;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -55,6 +58,7 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_TIM3_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -94,37 +98,19 @@ int main(void)
   MX_GPIO_Init();
   MX_USART1_UART_Init();
   MX_TIM3_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   HAL_TIM_Base_Start(&htim3);
-  error_type_t err;
-  dht22_config_t dht22_config_object = {
-      .gpio_port = GPIOA,
-      .gpio_pin = GPIO_PIN_11};
-  dht22_t *dht22_object = dht22Create(&dht22_config_object);
-  if (!dht22_object)
-  {
-    exit(1);
-  }
-  err = dht22Init(dht22_object);
-  if (err != OK)
-  {
-    exit(1);
-  }
-  HAL_Delay(2000);
+  static char buffer[50];
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+  printf("program started\n");
+
   while (1)
   {
     printf("I am running\n");
-    dht22_data_t dht_data = {0.0, 0.0};
-    err = dht22Read(dht22_object, &dht_data);
-    if (err == OK)
-    {
-      printf("humidity is: %.2f\n", dht_data.humidity);
-      printf("temerature is: %.2f\n", dht_data.temperature);
-    }
     // delayUs(10000);
     HAL_Delay(1000);
     /* USER CODE END WHILE */
@@ -248,6 +234,27 @@ static void MX_USART1_UART_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
+}
+
+/**
+ * @brief USART2 Initialization Function
+ * @param None
+ * @retval None
+ */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
 }
 
 /**
