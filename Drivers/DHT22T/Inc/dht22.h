@@ -24,7 +24,8 @@ extern "C"
     dht22_t *dht22Create(const dht22_config_t *config);
     error_type_t dht22Init(dht22_t *dht22_object);
     error_type_t dht22DeInit(dht22_t *dht22_object);
-    error_type_t dht22Read(dht22_t *dht22_object,dht22_data_t* data);
+    error_type_t dht22Read(dht22_t *dht22_object, dht22_data_t *data);
+    error_type_t dht22Destroy(dht22_t **dht22_object);
 #ifdef __cplusplus
 }
 #endif
