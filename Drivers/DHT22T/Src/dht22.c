@@ -18,13 +18,14 @@ struct dht22_t
 {
     GPIO_TypeDef *gpio_port;
     uint16_t gpio_pin;
+    bool initialized;
 };
 
 error_type_t dht22Init(dht22_t *dht22_object)
 {
     if (!dht22_object)
     {
-        return NULL_PARAMETER;
+        return SYSTEM_NULL_PARAMETER;
     }
 
     if (dht22_object->gpio_port == GPIOA)
@@ -53,7 +54,7 @@ error_type_t dht22Init(dht22_t *dht22_object)
     }
     else
     {
-        return INVALID_PIN_PORT;
+        return SYSTEM_INVALID_PIN_PORT;
     }
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
@@ -66,7 +67,8 @@ error_type_t dht22Init(dht22_t *dht22_object)
     // set pin high as default
     HAL_GPIO_WritePin(dht22_object->gpio_port, dht22_object->gpio_pin, GPIO_PIN_SET);
     // set pin high as default
-    return OK;
+    dht22_object->initialized = true;
+    return SYSTEM_OK;
 }
 dht22_t *dht22Create(const dht22_config_t *config)
 {
@@ -93,7 +95,7 @@ static error_type_t detectAck(dht22_t *dht22_object)
     {
         high_ack = true;
     }
-    return ((low_ack && high_ack)) ? OK : NO_ACK;
+    return ((low_ack && high_ack)) ? SYSTEM_OK : SYSTEM_NO_ACK;
 }
 
 static void trigger(dht22_t *dht22_object)
@@ -120,7 +122,7 @@ static error_type_t getData(dht22_t *dht22_object, uint8_t *bytes)
                 counter++;
                 if (counter >= TIMEOUT_PERIOD)
                 {
-                    return NO_RESPONSE;
+                    return SYSTEM_NO_RESPONSE;
                 }
             }
             counter = 0;
@@ -130,7 +132,7 @@ static error_type_t getData(dht22_t *dht22_object, uint8_t *bytes)
                 counter++;
                 if (counter >= (BEFORE_DATA_WAIT_TIME + ALLOWANCE))
                 {
-                    return NO_RESPONSE;
+                    return SYSTEM_NO_RESPONSE;
                 }
             }
             counter = 0;
@@ -140,7 +142,7 @@ static error_type_t getData(dht22_t *dht22_object, uint8_t *bytes)
             {
                 if ((__HAL_TIM_GET_COUNTER(&htim3) - time_before) >= (MAX_ON_PERIOD + ALLOWANCE))
                 {
-                    return NO_RESPONSE;
+                    return SYSTEM_NO_RESPONSE;
                 }
             }
             HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_RESET);
@@ -156,7 +158,7 @@ static error_type_t getData(dht22_t *dht22_object, uint8_t *bytes)
         bytes[x] = single_byte;
     }
 
-    return OK;
+    return SYSTEM_OK;
 }
 
 static error_type_t validateCheckSum(uint8_t *data)
@@ -171,11 +173,11 @@ static error_type_t validateCheckSum(uint8_t *data)
     printf("checksum is: %d\n", data[BYTES_IN_DATA - 1]);
     if (((uint8_t)sum) == data[BYTES_IN_DATA - 1])
     {
-        return OK;
+        return SYSTEM_OK;
     }
     else
     {
-        return CHECK_SUM_VALIDATION_FAILED;
+        return SYSTEM_CHECK_SUM_VALIDATION_FAILED;
     }
 }
 
@@ -195,38 +197,55 @@ error_type_t dht22Read(dht22_t *dht22_object, dht22_data_t *data)
     error_type_t err;
     if (dht22_object == NULL || data == NULL)
     {
-        return NULL_PARAMETER;
+        return SYSTEM_NULL_PARAMETER;
+    }
+    if (!dht22_object->initialized)
+    {
+        return SYSTEM_INVALID_STATE;
     }
     trigger(dht22_object);
     err = detectAck(dht22_object);
-    if (err != OK)
+    if (err != SYSTEM_OK)
     {
         return err;
     }
     uint8_t bytes[BYTES_IN_DATA] = {0};
     err = getData(dht22_object, bytes);
-    if (err != OK)
+    if (err != SYSTEM_OK)
     {
         return err;
     }
     err = validateCheckSum(bytes);
-    if (err != OK)
+    if (err != SYSTEM_OK)
     {
         return err;
     }
     convert_value(bytes, data);
-    return OK;
+    return SYSTEM_OK;
 }
+error_type_t dht22Destroy(dht22_t **dht22_object)
+{
+    if (*dht22_object)
+    {
+        free(*dht22_object);
+        *dht22_object = NULL;
+        return SYSTEM_OK;
+    }
+    else
+    {
+        return SYSTEM_NULL_PARAMETER;
+    }
+}
+
 error_type_t dht22DeInit(dht22_t *dht22_object)
 {
     if (dht22_object)
     {
-        free(dht22_object);
-        dht22_object = NULL;
-        return OK;
+        dht22_object->initialized = false;
+        return SYSTEM_OK;
     }
     else
     {
-        return NULL_PARAMETER;
+        return SYSTEM_NULL_PARAMETER;
     }
 }

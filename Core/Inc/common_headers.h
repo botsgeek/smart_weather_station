@@ -11,23 +11,24 @@ extern "C"
 
     typedef enum
     {
-        OK,
-        NULL_PARAMETER,
-        INVALID_PARAMETER,
-        INVALID_PIN_NUMBER,
-        INVALID_STATE,
-        INVALID_MODE,
-        INVALID_BAUD_RATE,
-        INVALID_LENGTH,
-        TIMED_OUT,
-        BUFFER_OVERFLOW,
-        UNKNOWN,
-        FAILED,
-        INVALID_TEMPERATURE,
-        INVALID_PIN_PORT,
-        NO_RESPONSE,
-        NO_ACK,
-        CHECK_SUM_VALIDATION_FAILED
+        SYSTEM_OK,
+        SYSTEM_NULL_PARAMETER,
+        SYSTEM_INVALID_PARAMETER,
+        SYSTEM_INVALID_PIN_NUMBER,
+        SYSTEM_INVALID_STATE,
+        SYSTEM_INVALID_MODE,
+        SYSTEM_INVALID_BAUD_RATE,
+        SYSTEM_INVALID_LENGTH,
+        SYSTEM_TIMED_OUT,
+        SYSTEM_BUFFER_OVERFLOW,
+        SYSTEM_UNKNOWN,
+        SYSTEM_FAILED,
+        SYSTEM_INVALID_TEMPERATURE,
+        SYSTEM_INVALID_PIN_PORT,
+        SYSTEM_NO_RESPONSE,
+        SYSTEM_NO_ACK,
+        SYSTEM_CHECK_SUM_VALIDATION_FAILED,
+        SYSTEM_BUSY
     } error_type_t;
     extern TIM_HandleTypeDef htim3;
     extern UART_HandleTypeDef huart1;
