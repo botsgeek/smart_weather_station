@@ -6,8 +6,8 @@ Above is the block diagram for the project
 
 - git checkout main
 - git pull
-- git checkout ticket-<name-of-task>
-- git push - origin ticket-<name-of-task>
+- git checkout ticket-`<name-of-task>`
+- git push -u origin ticket-`<name-of-task>`
 - continue to work on local branch
 - when done do "git push" to push your code to the repo
 - create pull request to allow your work to be merged to main branch
