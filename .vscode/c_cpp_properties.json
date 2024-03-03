@@ -6,6 +6,7 @@
         "Core/Inc",
         "Drivers/CMSIS/Device/ST/STM32F4xx/Include",
         "Drivers/CMSIS/Include",
+        "Drivers/DHT22T/Inc",
         "Drivers/STM32F4xx_HAL_Driver/Inc",
         "Drivers/STM32F4xx_HAL_Driver/Inc/Legacy"
       ],
@@ -13,7 +14,7 @@
         "STM32F411xE",
         "USE_HAL_DRIVER"
       ],
-      "compilerPath": "C:\\USERS\\RILWAN\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\ARM-NONE-EABI-GCC\\13.2.1-1.1.1\\.CONTENT\\BIN\\ARM-NONE-EABI-GCC.EXE"
+      "compilerPath": "C:\\USERS\\DAVID\\APPDATA\\ROAMING\\CODE\\USER\\GLOBALSTORAGE\\BMD.STM32-FOR-VSCODE\\@XPACK-DEV-TOOLS\\ARM-NONE-EABI-GCC\\13.2.1-1.1.1\\.CONTENT\\BIN\\ARM-NONE-EABI-GCC.EXE"
     }
   ],
   "version": 4
