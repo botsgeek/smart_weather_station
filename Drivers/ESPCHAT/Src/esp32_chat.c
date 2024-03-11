@@ -2,9 +2,7 @@
 #include <stdbool.h>
 #include <common_headers.h>
 #include <string.h>
-#define ERROR_RESPONSE ("\r\nERROR")
-#define OK_RESPONSE ("\r\nOK")
-#define BUSY_RESPONSE ("busy P...")
+#include <at_commands.h>
 #define SERIAL_SEND_TIMEOUT 100
 
 esp32_chat_config_t DEFAULT_ESPCHAT_CONFIG = {
@@ -175,6 +173,7 @@ static error_type_t read(esp32_chat_t *esp32_chat_object, uint32_t timeout, char
         }
         if (checkOk(buffer, counter) || checkError(buffer, counter) || checkBusy(buffer, counter))
         {
+            buffer[counter++] = 0;
             return SYSTEM_OK;
         }
         counter++;
