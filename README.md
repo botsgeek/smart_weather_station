@@ -4,6 +4,7 @@ Above is the block diagram for the project
 
 # How to contribute to project
 
+- git clone --recursive `<repo-url>`
 - git checkout main
 - git pull
 - git checkout ticket-`<name-of-task>`
@@ -11,6 +12,11 @@ Above is the block diagram for the project
 - continue to work on local branch
 - when done do "git push" to push your code to the repo
 - create pull request to allow your work to be merged to main branch
+
+# updating submodules
+
+- git submodule init
+- git submodule update --recursive
 
 # Setting Up 
 
