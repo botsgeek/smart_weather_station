@@ -130,6 +130,10 @@ to your header file
 
 - then regenerate docs as shown in the `Generating documnetation` above
 
+# ESP32 Code
+
+- goto [link](https://github.com/botsgeek/esp32_at) for guide on flashing AT firmware on the esp32
+
 
 # Datasheets
 
