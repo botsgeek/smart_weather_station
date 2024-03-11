@@ -58,7 +58,9 @@ Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c \
 Drivers/DHT22T/Src/dht22.c \
 Core/Src/common_headers.c \
-Drivers/ESPCHAT/Src/esp32_chat.c 
+Drivers/ESPCHAT/Src/esp32_chat.c \
+Drivers/ESPWIFI/Src/esp32_wifi.c \
+Core/Lib/regex/tiny-regex-c/re.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -124,8 +126,9 @@ C_INCLUDES =  \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/DHT22T/Inc \
--IDrivers/ESPCHAT/Inc
-
+-IDrivers/ESPCHAT/Inc \
+-IDrivers/ESPWIFI/Inc \
+-ICore/Lib/regex/tiny-regex-c
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall 
@@ -151,6 +154,12 @@ LIBS = -lc -lm -lnosys
 LIBDIR = 
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections \
 -u _printf_float
+
+
+# Define the source files
+# SRC := $(wildcard Core/Lib/regex/tiny-regex-c/tests/*.c)
+
+# SRC := $(filter-out, $(SRC))
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
