@@ -100,6 +100,36 @@ from the option.
 
 ![alt text](image-8.png)
 
+# Generating documnetation
+
+- install doxygen at [link](https://www.doxygen.nl/download.html)
+
+- Add the following vscode extensions
+
+![alt text](image-9.png)
+
+![alt text](image-10.png)
+
+- press `Ctrl+Shift+P` ,then start typing `doxygen` select option `Generate documentation` in the list
+
+![alt text](image-11.png)
+
+- this should generate the docs which can be found at `Docs/output`
+
+## adding more docs
+
+- Add your doxygen compatible comments such as shown below:
+
+![alt text](image-12.png)
+
+to your header file
+
+- add the path to the parent directory of your header file in the Doxyfile at point shown below:
+
+![alt text](image-13.png)
+
+- then regenerate docs as shown in the `Generating documnetation` above
+
 
 # Datasheets
 
