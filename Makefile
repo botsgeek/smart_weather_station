@@ -60,7 +60,7 @@ Drivers/DHT22T/Src/dht22.c \
 Core/Src/common_headers.c \
 Drivers/ESPCHAT/Src/esp32_chat.c \
 Drivers/ESPWIFI/Src/esp32_wifi.c \
-Core/Lib/regex/tiny-regex-c/re.c
+ThirdParty/regex/tiny-regex-c/re.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -128,7 +128,7 @@ C_INCLUDES =  \
 -IDrivers/DHT22T/Inc \
 -IDrivers/ESPCHAT/Inc \
 -IDrivers/ESPWIFI/Inc \
--ICore/Lib/regex/tiny-regex-c
+-IThirdParty/regex/tiny-regex-c
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall 
