@@ -1,3 +1,4 @@
+# Project Smart Weather Station Overview.
 This Project is about a smart weather station using an STM-based MCU and other peripherals such as a the RTC for timing, DHT22 For temperature and humidity,BME280  for pressure, temperature and humidity,LM75 for temperature sensing.
 
 The Goal of the project a all-in one digital smart weather station to meausre parameters such as temperature, humidity and pressure and store them over time.
