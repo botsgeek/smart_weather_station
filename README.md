@@ -1,4 +1,14 @@
+# Project Smart Weather Station Overview.
+This Project is about a smart weather station using an STM-based MCU and other peripherals such as a the RTC for timing, DHT22 For temperature and humidity,BME280  for pressure, temperature and humidity,LM75 for temperature sensing.
+
+The Goal of the project a all-in one digital smart weather station to meausre parameters such as temperature, humidity and pressure and store them over time.
+
+Solving this problem will include writing the necessary codes that enables these hardware peripherals work together in sync, and also assembling all componets in a compact form with a screen to display all te weather parameters and also store data gotten overtime.
+
+
+
 ![alt text](<weather_station-Page-1.drawio (1).png>)
+
 
 Above is the block diagram for the project 
 
@@ -6,7 +16,7 @@ Above is the block diagram for the project
 
 - git checkout main
 - git pull
-- git checkout ticket-`<name-of-task>`
+- git checkout -b ticket-`<name-of-task>`
 - git push -u origin ticket-`<name-of-task>`
 - continue to work on local branch
 - when done do "git push" to push your code to the repo
