@@ -28,7 +28,8 @@ extern "C"
         SYSTEM_NO_RESPONSE,
         SYSTEM_NO_ACK,
         SYSTEM_CHECK_SUM_VALIDATION_FAILED,
-        SYSTEM_BUSY
+        SYSTEM_BUSY,
+        SYSTEM_INVALID_RESPONSE,
     } error_type_t;
     extern TIM_HandleTypeDef htim3;
     extern UART_HandleTypeDef huart1;
