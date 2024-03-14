@@ -18,7 +18,6 @@ typedef struct {
     SPI_HandleTypeDef *spi_handle;
     GPIO_TypeDef *cs_port;
     uint16_t cs_pin;
-    //file object pointer FIL fil
 } sdcard_config_t;
 
 typedef struct {
@@ -31,11 +30,9 @@ typedef struct {
     uint32_t size;
 } sdcard_data_t;
 
-//typedef struct sdcard_t sdcard_t;
 
 sdcard_t *sdcard_create(const sdcard_config_t *config);
 error_type_t sdcard_Init(sdcard_t *sdcard_object);
-// error_type_t sdcard_get_info(const FATFS *fs, sdcard_info_t *info);
 error_type_t sdcard_get_info(FATFS *fs, sdcard_info_t *info);
 error_type_t sdcard_create_file(sdcard_t *sdcard_object, const char *filename, FIL* file);
 error_type_t sdcard_read_file(sdcard_t *sdcard_object, const sdcard_data_t *data, FIL* file);
@@ -44,7 +41,6 @@ error_type_t sdcard_delete_file(sdcard_t *sdcard_object, const char *filename, F
 error_type_t sdcard_close_file(sdcard_t *sdcard_object, FIL* file);
 error_type_t sdcard_Deinit(sdcard_t *sdcard_object);
 error_type_t sdcard_destroy(sdcard_t **sdcard_object);
-//add API for file close
 #ifdef __cplusplus
 }
 #endif
