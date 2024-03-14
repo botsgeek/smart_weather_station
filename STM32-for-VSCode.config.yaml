@@ -38,6 +38,7 @@ cFlags:
   - -fdata-sections
   - -ffunction-sections
   - -DDEBUG
+  - -D_USE_WRITE
 
 cxxFlags: []
 assemblyFlags: 
