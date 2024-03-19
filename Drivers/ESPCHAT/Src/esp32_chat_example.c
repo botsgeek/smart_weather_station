@@ -29,6 +29,26 @@ if (err != SYSTEM_OK)
     printf("esp chat deinit failed,error code is: %d\n", (int)err);
     exit(1);
 }
+err = esp32ChatInit(esp32_chat_object);
+if (err != SYSTEM_OK)
+{
+    printf("esp chat object init failed\n");
+    exit(1);
+}
+memset(buffer, 0, 50);
+err = esp32ChatSendReceive(esp32_chat_object, message, buffer, 50);
+if (err != SYSTEM_OK)
+{
+    printf("esp chat send received failed,error code is: %d\n", (int)err);
+    exit(1);
+}
+printf("AT response is:\n %s\n", buffer);
+err = esp32ChatDeInit(esp32_chat_object);
+if (err != SYSTEM_OK)
+{
+    printf("esp chat deinit failed,error code is: %d\n", (int)err);
+    exit(1);
+}
 err = esp32ChatSendReceive(esp32_chat_object, message, buffer, 50);
 if (err == SYSTEM_OK)
 {
