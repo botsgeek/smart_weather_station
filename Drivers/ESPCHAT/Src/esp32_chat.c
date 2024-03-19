@@ -60,6 +60,9 @@ error_type_t esp32ChatDeInit(esp32_chat_t *esp32_chat_object)
 {
     if (esp32_chat_object)
     {
+        HAL_StatusTypeDef err = HAL_UART_DeInit(esp32_chat_object->uart_object->Instance);
+        if (err != HAL_OK)
+            return SYSTEM_FAILED;
         esp32_chat_object->initialized = false;
         return SYSTEM_OK;
     }

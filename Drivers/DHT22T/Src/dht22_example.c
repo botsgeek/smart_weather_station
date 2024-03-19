@@ -30,11 +30,31 @@ void example()
     printf("humidity is: %.2f\n", dht_data.humidity);
     printf("temerature is: %.2f\n", dht_data.temperature);
     err = dht22DeInit(dht22_object);
-    if (err == SYSTEM_OK)
+    if (err != SYSTEM_OK)
+    {
+        exit(1);
+    }
+    err = dht22Init(dht22_object);
+    if (err != SYSTEM_OK)
     {
         exit(1);
     }
     printf("deinitialized success\n");
+    HAL_Delay(2000);
+    dht_data.humidity = 0;
+    dht_data.temperature = 0;
+    err = dht22Read(dht22_object, &dht_data);
+    if (err != SYSTEM_OK)
+    {
+        exit(1);
+    }
+    printf("humidity is: %.2f\n", dht_data.humidity);
+    printf("temerature is: %.2f\n", dht_data.temperature);
+    err = dht22DeInit(dht22_object);
+    if (err != SYSTEM_OK)
+    {
+        exit(1);
+    }
     err = dht22Destroy(&dht22_object);
     if (err == SYSTEM_OK)
     {
