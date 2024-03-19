@@ -8,7 +8,8 @@ void example()
   sdcard_config_t sdcard_config = {
     .spi_handle = &hspi1,
     .cs_port = SD_CS_GPIO_Port, // Set your GPIO port and pin for chip select
-    .cs_pin = SD_CS_Pin
+    .cs_pin = SD_CS_Pin,
+    .spi_port = SPI1
   };
 //Create the object
   sdcard_t *sdcard_object = sdcard_create(&sdcard_config);
@@ -17,7 +18,7 @@ void example()
     exit(1);
   }
 //Initialize the sdcard 
-  error_type_t err = sdcard_Init(sdcard_object);
+  error_type_t err = sdcardInit(sdcard_object);
   if (err != SYSTEM_OK) {
     printf("Failed to initialize SD card\n");
     exit(1);
@@ -35,7 +36,7 @@ void example()
 
   // Get SD card information
   sdcard_info_t sdcard_info;
-  error_type_t result = sdcard_get_info(&fs, &sdcard_info);
+  error_type_t result = sdcardGetInfo(&fs, &sdcard_info);
   if (result != SYSTEM_OK) {
     printf("Failed to get SD card information\n");
     exit(1);
@@ -50,7 +51,7 @@ void example()
   FIL fil;
   const char *filename = "test.txt";
  // err = sdcard_create_file(sdcard_object, filename, &fil);
- err = sdcard_create_file(sdcard_object, filename, &fil);
+ err = sdcardCreateFile(sdcard_object, filename, &fil);
   if (err != SYSTEM_OK) {
     printf("Failed to create file\n");
     exit(1);
@@ -62,13 +63,13 @@ void example()
     .buffer = (uint8_t*)write_data,
     .size = strlen(write_data)
   };
-  err = sdcard_write_file(sdcard_object, &data, &fil);
+  err = sdcardWriteFile(sdcard_object, &data, &fil);
   if (err != SYSTEM_OK) {
     printf("Failed to write to file\n");
     exit(1);
   }
 
-  err = sdcard_read_file(sdcard_object, &data, &fil);
+  err = sdcardReadFile(sdcard_object, &data, &fil);
   if (err != SYSTEM_OK) {
     printf("Failed to read file\n");
     free(data.buffer);
@@ -80,28 +81,28 @@ void example()
   printf("Read data: %s\n", data.buffer);
 
      // Close the file
-  err = sdcard_close_file(sdcard_object, &fil);
+  err = sdcardCloseFile(sdcard_object, &fil);
   if (err != SYSTEM_OK) {
     printf("Failed to close file\n");
     exit(1);
   }
 
   // Delete the file
-  err = sdcard_delete_file(sdcard_object, filename, &fil);
+  err = sdcardDeleteFile(sdcard_object, filename, &fil);
   if (err != SYSTEM_OK) {
     printf("Failed to delete file\n");
     exit(1);
   }
 
    /* Deinitialize the SD card */
-  err = sdcard_Deinit(sdcard_object);
+  err = sdcardDeInit(sdcard_object);
   if (err != SYSTEM_OK) {
     printf("Failed to deinitialize SD card\n");
     exit(1);
   }
 
   /* Destroy the SD card object */
-  err = sdcard_destroy(&sdcard_object);
+  err = sdcardDestroy(&sdcard_object);
   if (err != SYSTEM_OK) {
     printf("Failed to destroy SD card object\n");
     exit(1);
