@@ -68,6 +68,8 @@ Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
 Middlewares/Third_Party/FatFs/src/option/syscall.c \
 FATFS\Target\user_diskio_spi.c
+Drivers/ESPWIFI/Src/esp32_wifi.c \
+ThirdParty/regex/tiny-regex-c/re.c
 
 # ASM sources
 ASM_SOURCES =  \
@@ -139,6 +141,8 @@ C_INCLUDES =  \
 -IFATFS/App \
 -IMiddlewares/Third_Party/FatFs/src
 
+-IDrivers/ESPWIFI/Inc \
+-IThirdParty/regex/tiny-regex-c
 
 # compile gcc flags
 ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall 
@@ -164,6 +168,12 @@ LIBS = -lc -lm -lnosys
 LIBDIR = 
 LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BUILD_DIR)/$(TARGET).map,--cref -Wl,--gc-sections \
 -u _printf_float
+
+
+# Define the source files
+# SRC := $(wildcard Core/Lib/regex/tiny-regex-c/tests/*.c)
+
+# SRC := $(filter-out, $(SRC))
 
 # default action: build all
 all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin

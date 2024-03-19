@@ -1,16 +1,32 @@
+# Project Smart Weather Station Overview.
+This Project is about a smart weather station using an STM-based MCU and other peripherals such as a the RTC for timing, DHT22 For temperature and humidity,BME280  for pressure, temperature and humidity,LM75 for temperature sensing.
+
+The Goal of the project a all-in one digital smart weather station to meausre parameters such as temperature, humidity and pressure and store them over time.
+
+Solving this problem will include writing the necessary codes that enables these hardware peripherals work together in sync, and also assembling all componets in a compact form with a screen to display all te weather parameters and also store data gotten overtime.
+
+
+
 ![alt text](<weather_station-Page-1.drawio (1).png>)
+
 
 Above is the block diagram for the project 
 
 # How to contribute to project
 
+- git clone --recursive `<repo-url>`
 - git checkout main
 - git pull
-- git checkout ticket-`<name-of-task>`
+- git checkout -b ticket-`<name-of-task>`
 - git push -u origin ticket-`<name-of-task>`
 - continue to work on local branch
 - when done do "git push" to push your code to the repo
 - create pull request to allow your work to be merged to main branch
+
+# updating submodules
+
+- git submodule init
+- git submodule update --recursive
 
 # Setting Up 
 
@@ -93,6 +109,40 @@ start debugging
 from the option.
 
 ![alt text](image-8.png)
+
+# Generating documnetation
+
+- install doxygen at [link](https://www.doxygen.nl/download.html)
+
+- Add the following vscode extensions
+
+![alt text](image-9.png)
+
+![alt text](image-10.png)
+
+- press `Ctrl+Shift+P` ,then start typing `doxygen` select option `Generate documentation` in the list
+
+![alt text](image-11.png)
+
+- this should generate the docs which can be found at `Docs/output`
+
+## adding more docs
+
+- Add your doxygen compatible comments such as shown below:
+
+![alt text](image-12.png)
+
+to your header file
+
+- add the path to the parent directory of your header file in the Doxyfile at point shown below:
+
+![alt text](image-13.png)
+
+- then regenerate docs as shown in the `Generating documnetation` above
+
+# ESP32 Code
+
+- goto [link](https://github.com/botsgeek/esp32_at) for guide on flashing AT firmware on the esp32
 
 
 # Datasheets
