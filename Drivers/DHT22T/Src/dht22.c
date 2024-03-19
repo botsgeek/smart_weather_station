@@ -1,5 +1,7 @@
 #include <dht22.h>
 #include <stdbool.h>
+#include <string.h>
+#include <stdlib.h>
 #include <common_headers.h>
 #define FIRST_TRIGGER_TIME 18000
 #define SECOND_TRIGGER_TIME 40
@@ -16,8 +18,7 @@
 
 struct dht22_t
 {
-    GPIO_TypeDef *gpio_port;
-    uint16_t gpio_pin;
+    dht22_config_t config;
     bool initialized;
 };
 
@@ -28,27 +29,27 @@ error_type_t dht22Init(dht22_t *dht22_object)
         return SYSTEM_NULL_PARAMETER;
     }
 
-    if (dht22_object->gpio_port == GPIOA)
+    if (dht22_object->config.gpio_port == GPIOA)
     {
         __HAL_RCC_GPIOA_CLK_ENABLE();
     }
-    else if (dht22_object->gpio_port == GPIOB)
+    else if (dht22_object->config.gpio_port == GPIOB)
     {
         __HAL_RCC_GPIOB_CLK_ENABLE();
     }
-    else if (dht22_object->gpio_port == GPIOC)
+    else if (dht22_object->config.gpio_port == GPIOC)
     {
         __HAL_RCC_GPIOC_CLK_ENABLE();
     }
-    else if (dht22_object->gpio_port == GPIOD)
+    else if (dht22_object->config.gpio_port == GPIOD)
     {
         __HAL_RCC_GPIOD_CLK_ENABLE();
     }
-    else if (dht22_object->gpio_port == GPIOE)
+    else if (dht22_object->config.gpio_port == GPIOE)
     {
         __HAL_RCC_GPIOE_CLK_ENABLE();
     }
-    else if (dht22_object->gpio_port == GPIOH)
+    else if (dht22_object->config.gpio_port == GPIOH)
     {
         __HAL_RCC_GPIOH_CLK_ENABLE();
     }
@@ -59,13 +60,13 @@ error_type_t dht22Init(dht22_t *dht22_object)
 
     GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-    GPIO_InitStruct.Pin = dht22_object->gpio_pin;
+    GPIO_InitStruct.Pin = dht22_object->config.gpio_pin;
     GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     // set pin high as default
-    HAL_GPIO_WritePin(dht22_object->gpio_port, dht22_object->gpio_pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin, GPIO_PIN_SET);
     // set pin high as default
     dht22_object->initialized = true;
     return SYSTEM_OK;
@@ -77,8 +78,11 @@ dht22_t *dht22Create(const dht22_config_t *config)
         return NULL;
     }
     dht22_t *dht22_object = (dht22_t *)malloc(sizeof(dht22_t));
-    dht22_object->gpio_pin = config->gpio_pin;
-    dht22_object->gpio_port = config->gpio_port;
+    if (!dht22_object)
+    {
+        return NULL;
+    }
+    memcpy(&(dht22_object->config), config, sizeof(dht22_config_t));
     return dht22_object;
 }
 static error_type_t detectAck(dht22_t *dht22_object)
@@ -86,12 +90,12 @@ static error_type_t detectAck(dht22_t *dht22_object)
     bool low_ack = false;
     bool high_ack = false;
     delayUs(((ACK_WAIT_TIME / 2) + ALLOWANCE));
-    if (HAL_GPIO_ReadPin(dht22_object->gpio_port, dht22_object->gpio_pin) == GPIO_PIN_RESET)
+    if (HAL_GPIO_ReadPin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin) == GPIO_PIN_RESET)
     {
         low_ack = true;
     }
     delayUs(ACK_WAIT_TIME);
-    if (HAL_GPIO_ReadPin(dht22_object->gpio_port, dht22_object->gpio_pin) == GPIO_PIN_SET)
+    if (HAL_GPIO_ReadPin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin) == GPIO_PIN_SET)
     {
         high_ack = true;
     }
@@ -100,9 +104,9 @@ static error_type_t detectAck(dht22_t *dht22_object)
 
 static void trigger(dht22_t *dht22_object)
 {
-    HAL_GPIO_WritePin(dht22_object->gpio_port, dht22_object->gpio_pin, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin, GPIO_PIN_RESET);
     delayUs(FIRST_TRIGGER_TIME + ALLOWANCE);
-    HAL_GPIO_WritePin(dht22_object->gpio_port, dht22_object->gpio_pin, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin, GPIO_PIN_SET);
     delayUs(SECOND_TRIGGER_TIME - ALLOWANCE);
 }
 
@@ -116,7 +120,7 @@ static error_type_t getData(dht22_t *dht22_object, uint8_t *bytes)
         {
             volatile uint8_t bit_data = 0;
             volatile uint16_t counter = 0;
-            while (HAL_GPIO_ReadPin(dht22_object->gpio_port, dht22_object->gpio_pin) != GPIO_PIN_RESET)
+            while (HAL_GPIO_ReadPin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin) != GPIO_PIN_RESET)
             {
                 delayUs(TIMEOUT_TICK);
                 counter++;
@@ -126,7 +130,7 @@ static error_type_t getData(dht22_t *dht22_object, uint8_t *bytes)
                 }
             }
             counter = 0;
-            while (HAL_GPIO_ReadPin(dht22_object->gpio_port, dht22_object->gpio_pin) != GPIO_PIN_SET)
+            while (HAL_GPIO_ReadPin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin) != GPIO_PIN_SET)
             {
                 delayUs(TIMEOUT_TICK);
                 counter++;
@@ -138,7 +142,7 @@ static error_type_t getData(dht22_t *dht22_object, uint8_t *bytes)
             counter = 0;
             uint16_t time_before = __HAL_TIM_GET_COUNTER(&htim3);
             HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8, GPIO_PIN_SET);
-            while (HAL_GPIO_ReadPin(dht22_object->gpio_port, dht22_object->gpio_pin) != GPIO_PIN_RESET)
+            while (HAL_GPIO_ReadPin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin) != GPIO_PIN_RESET)
             {
                 if ((__HAL_TIM_GET_COUNTER(&htim3) - time_before) >= (MAX_ON_PERIOD + ALLOWANCE))
                 {
@@ -241,6 +245,7 @@ error_type_t dht22DeInit(dht22_t *dht22_object)
 {
     if (dht22_object)
     {
+        HAL_GPIO_DeInit(dht22_object->config.gpio_port, dht22_object->config.gpio_pin);
         dht22_object->initialized = false;
         return SYSTEM_OK;
     }
