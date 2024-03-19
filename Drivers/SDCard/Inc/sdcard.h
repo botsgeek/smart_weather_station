@@ -8,7 +8,7 @@
 #include "stm32f4xx_hal.h"
 #include "ff.h"
 #include "fatfs.h"
-
+#define SD_SPI_HANDLE hspi1
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,6 +18,7 @@ typedef struct {
     SPI_HandleTypeDef *spi_handle;
     GPIO_TypeDef *cs_port;
     uint16_t cs_pin;
+    SPI_TypeDef *spi_port;
 } sdcard_config_t;
 
 typedef struct {
@@ -31,16 +32,18 @@ typedef struct {
 } sdcard_data_t;
 
 
-sdcard_t *sdcard_create(const sdcard_config_t *config);
-error_type_t sdcard_Init(sdcard_t *sdcard_object);
-error_type_t sdcard_get_info(FATFS *fs, sdcard_info_t *info);
-error_type_t sdcard_create_file(sdcard_t *sdcard_object, const char *filename, FIL* file);
-error_type_t sdcard_read_file(sdcard_t *sdcard_object, const sdcard_data_t *data, FIL* file);
-error_type_t sdcard_write_file(sdcard_t *sdcard_object, const sdcard_data_t *data, FIL* file);
-error_type_t sdcard_delete_file(sdcard_t *sdcard_object, const char *filename, FIL* file);
-error_type_t sdcard_close_file(sdcard_t *sdcard_object, FIL* file);
-error_type_t sdcard_Deinit(sdcard_t *sdcard_object);
-error_type_t sdcard_destroy(sdcard_t **sdcard_object);
+sdcard_t *sdcardCreate(const sdcard_config_t *config);
+error_type_t sdcardInit(sdcard_t *sdcard_object);
+error_type_t sdcardGetInfo(sdcard_t *sdcard_object,FATFS *fs, sdcard_info_t *info);
+error_type_t sdcardCreateFile(sdcard_t *sdcard_object, const char *filename, FIL* file);
+error_type_t sdcardReadFile(sdcard_t *sdcard_object, const sdcard_data_t *data, FIL* file);
+error_type_t sdcardWriteFile(sdcard_t *sdcard_object, const sdcard_data_t *data, FIL* file);
+error_type_t sdcardDeleteFile(sdcard_t *sdcard_object, const char *filename, FIL* file);
+error_type_t sdcardCloseFile(sdcard_t *sdcard_object, FIL* file);
+error_type_t sdcardDeInit(sdcard_t *sdcard_object);
+error_type_t sdcardDestroy(sdcard_t **sdcard_object);
+error_type_t sdcardFileMount(sdcard_t *sdcard_object,FATFS *fs);
+error_type_t sdcardFileUnMount(sdcard_t *sdcard_object,FATFS *fs);
 #ifdef __cplusplus
 }
 #endif

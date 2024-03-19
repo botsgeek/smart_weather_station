@@ -3,17 +3,19 @@
 #include <stdbool.h>
 #include <common_headers.h>
 #include "ff.h"
+#include "fatfs.h"
 sdcard_t *sdcard_object;
 
 struct sdcard_t {
     SPI_HandleTypeDef *spi_handle;
     GPIO_TypeDef *cs_port;
     uint16_t cs_pin;
+    SPI_TypeDef *spi_port;
     bool initialized;
 };
 
 
-    sdcard_t *sdcard_create(const sdcard_config_t *config) {
+    sdcard_t *sdcardCreate(const sdcard_config_t *config) {
   
     if (config == NULL || config->spi_handle == NULL)
     {
@@ -28,12 +30,13 @@ struct sdcard_t {
    sdcard_object->spi_handle = config->spi_handle;
    sdcard_object->cs_pin = config->cs_pin;
    sdcard_object->cs_port = config->cs_port;
+   sdcard_object->spi_port = config->spi_port;
    sdcard_object->initialized = false;
 
    return sdcard_object;
 }
 
-error_type_t sdcard_Init(sdcard_t *sdcard_object) {
+error_type_t sdcardInit(sdcard_t *sdcard_object) {
     if (!sdcard_object)
     {
         return SYSTEM_NULL_PARAMETER;
@@ -76,11 +79,34 @@ error_type_t sdcard_Init(sdcard_t *sdcard_object) {
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
     HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     HAL_GPIO_WritePin(sdcard_object->cs_port, sdcard_object->cs_pin, GPIO_PIN_SET);
+  /* SPI1 parameter configuration*/
+  sdcard_object->spi_handle->Instance = sdcard_object->spi_port;
+  sdcard_object->spi_handle->Init.Mode = SPI_MODE_MASTER;
+  sdcard_object->spi_handle->Init.Direction = SPI_DIRECTION_2LINES;
+  sdcard_object->spi_handle->Init.DataSize = SPI_DATASIZE_8BIT;
+  sdcard_object->spi_handle->Init.CLKPolarity = SPI_POLARITY_LOW;
+  sdcard_object->spi_handle->Init.CLKPhase = SPI_PHASE_1EDGE;
+  sdcard_object->spi_handle->Init.NSS = SPI_NSS_SOFT;
+  sdcard_object->spi_handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
+  sdcard_object->spi_handle->Init.FirstBit = SPI_FIRSTBIT_MSB;
+  sdcard_object->spi_handle->Init.TIMode = SPI_TIMODE_DISABLE;
+  sdcard_object->spi_handle->Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+  sdcard_object->spi_handle->Init.CRCPolynomial = 10;
+  if (HAL_SPI_Init(sdcard_object->spi_handle) != HAL_OK)
+  {
+    Error_Handler();
+    return SYSTEM_FAILED;
+  }
+    MX_FATFS_Init();
     return SYSTEM_OK;
 }
 
 
-error_type_t sdcard_get_info(FATFS *fs, sdcard_info_t *info) {
+error_type_t sdcardGetInfo(sdcard_t *sdcard_object, FATFS *fs, sdcard_info_t *info){
+     if (!sdcard_object || !info) {
+        return SYSTEM_NULL_PARAMETER;
+    }
+
     DWORD fre_clust, fre_sect, tot_sect;
     FRESULT res;
 
@@ -105,7 +131,7 @@ error_type_t sdcard_get_info(FATFS *fs, sdcard_info_t *info) {
 }
 
 
-error_type_t sdcard_create_file(sdcard_t *sdcard_object, const char *filename, FIL* file) {
+error_type_t sdcardCreateFile(sdcard_t *sdcard_object, const char *filename, FIL* file) {
     // Implement the code to create a file on the SD card
      if (!sdcard_object || !filename || !file) {
         return SYSTEM_NULL_PARAMETER;
@@ -126,7 +152,7 @@ error_type_t sdcard_create_file(sdcard_t *sdcard_object, const char *filename, F
 }
 
 
-error_type_t sdcard_read_file(sdcard_t *sdcard_object, const sdcard_data_t *data,FIL* file){
+error_type_t sdcardReadFile(sdcard_t *sdcard_object, const sdcard_data_t *data, FIL* file){
 
     if (!sdcard_object || !file || !data) {
         return SYSTEM_NULL_PARAMETER;
@@ -142,7 +168,7 @@ error_type_t sdcard_read_file(sdcard_t *sdcard_object, const sdcard_data_t *data
     return SYSTEM_OK;
 }
 
-error_type_t sdcard_write_file(sdcard_t *sdcard_object, const sdcard_data_t *data,FIL* file){
+error_type_t sdcardWriteFile(sdcard_t *sdcard_object, const sdcard_data_t *data, FIL* file){
     if (!sdcard_object || !data ||!file ) {
         return SYSTEM_NULL_PARAMETER;
      }
@@ -158,7 +184,7 @@ error_type_t sdcard_write_file(sdcard_t *sdcard_object, const sdcard_data_t *dat
     return SYSTEM_OK;
  }
 
-error_type_t sdcard_close_file(sdcard_t *sdcard_object, FIL* file) {
+error_type_t sdcardCloseFile(sdcard_t *sdcard_object, FIL* file) {
     if (!sdcard_object || !file) {
         return SYSTEM_NULL_PARAMETER;
     }
@@ -171,7 +197,7 @@ error_type_t sdcard_close_file(sdcard_t *sdcard_object, FIL* file) {
 
     return SYSTEM_OK;
 }
-error_type_t sdcard_delete_file(sdcard_t *sdcard_object, const char *filename, FIL* file) {
+error_type_t sdcardDeleteFile(sdcard_t *sdcard_object, const char *filename, FIL* file) {
     if (!sdcard_object || !filename || !file) {
         return SYSTEM_NULL_PARAMETER;
     }
@@ -184,7 +210,7 @@ error_type_t sdcard_delete_file(sdcard_t *sdcard_object, const char *filename, F
     return SYSTEM_OK;
 }
 
-error_type_t sdcard_Deinit(sdcard_t *sdcard_object){
+error_type_t sdcardDeInit(sdcard_t *sdcard_object){
     
     if (sdcard_object)
     {
@@ -198,7 +224,7 @@ error_type_t sdcard_Deinit(sdcard_t *sdcard_object){
 
 }
 
-error_type_t sdcard_destroy(sdcard_t **sdcard_object) {
+error_type_t sdcardDestroy(sdcard_t **sdcard_object) {
     if (*sdcard_object)
     {
         free(*sdcard_object);
@@ -211,3 +237,39 @@ error_type_t sdcard_destroy(sdcard_t **sdcard_object) {
     }
 }
 
+error_type_t sdcardFileMount(sdcard_t *sdcard_object,FATFS *fs){
+    if (!sdcard_object) {
+        return SYSTEM_NULL_PARAMETER;
+    }
+
+    FRESULT res = f_mount(&fs, "", 1);
+     if ( res != FR_OK)
+    {
+        printf("Failed to mount SD card\n");
+        
+        return SYSTEM_FAILED;
+    }
+    else
+    HAL_Delay(2000);
+    return SYSTEM_OK;
+
+}
+
+error_type_t sdcardFileUnMount(sdcard_t *sdcard_object,FATFS *fs){
+     if (!sdcard_object) {
+        return SYSTEM_NULL_PARAMETER;
+    }
+
+    FRESULT res = f_mount(NULL, "", 0);
+     if ( res != FR_OK)
+    {
+    printf("Failed to unmount SD card\n");
+    
+    return SYSTEM_FAILED;
+
+    }
+    return SYSTEM_OK;
+
+
+
+}
