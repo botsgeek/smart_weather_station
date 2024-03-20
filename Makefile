@@ -61,13 +61,13 @@ Core/Src/common_headers.c \
 Drivers/ESPCHAT/Src/esp32_chat.c \
 Drivers/SDCard/Src/sdcard.c \
 FATFS/Target/user_diskio.c \
+FATFS/Target/user_diskio_spi.c \
 FATFS/App/fatfs.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_spi.c \
 Middlewares/Third_Party/FatFs/src/diskio.c \
 Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
 Middlewares/Third_Party/FatFs/src/option/syscall.c \
-FATFS\Target\user_diskio_spi.c \
 Drivers/ESPWIFI/Src/esp32_wifi.c \
 ThirdParty/regex/tiny-regex-c/re.c
 
