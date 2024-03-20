@@ -69,6 +69,7 @@ void HAL_MspInit(void)
 
   __HAL_RCC_SYSCFG_CLK_ENABLE();
   __HAL_RCC_PWR_CLK_ENABLE();
+  //__HAL_RCC_AFIO_CLK_ENABLE();
 
   /* System interrupt init*/
 
@@ -303,6 +304,31 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
   /* USER CODE END USART2_MspDeInit 1 */
   }
 
+}
+
+/**
+* @brief I2C MSP Initialization
+* This function Initializes the
+* @param i2cHandle: I2C handle pointer
+* @retval None
+*/
+void HAL_I2C_MspInit(I2C_HandleTypeDef *i2cHandle)
+{
+    GPIO_InitTypeDef GPIO_InitStruct =
+    { 0 };
+    if (i2cHandle->Instance == I2C1)
+    {
+        __HAL_RCC_I2C1_CLK_ENABLE();
+        __HAL_RCC_GPIOB_CLK_ENABLE();
+        /**I2C1 GPIO Configuration
+         PB6     ------> I2C1_SCL
+         PB7     ------> I2C1_SDA
+         */
+        GPIO_InitStruct.Pin = GPIO_PIN_6 | GPIO_PIN_7;
+        GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+        GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+        HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    }
 }
 
 /* USER CODE BEGIN 1 */
