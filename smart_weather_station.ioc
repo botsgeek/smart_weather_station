@@ -7,6 +7,7 @@ GPIO.groupedBy=Group By Peripherals
 KeepUserPlacement=false
 Mcu.CPN=STM32F411CEU6
 Mcu.Family=STM32F4
+<<<<<<< HEAD
 Mcu.IP0=FATFS
 Mcu.IP1=NVIC
 Mcu.IP2=RCC
@@ -16,10 +17,21 @@ Mcu.IP5=TIM3
 Mcu.IP6=USART1
 Mcu.IP7=USART2
 Mcu.IPNb=8
+=======
+Mcu.IP0=I2C1
+Mcu.IP1=NVIC
+Mcu.IP2=RCC
+Mcu.IP3=SYS
+Mcu.IP4=TIM3
+Mcu.IP5=USART1
+Mcu.IP6=USART2
+Mcu.IPNb=7
+>>>>>>> 97e53665b505eb3e475580a7474b7829b401767c
 Mcu.Name=STM32F411C(C-E)Ux
 Mcu.Package=UFQFPN48
 Mcu.Pin0=PA2
 Mcu.Pin1=PA3
+<<<<<<< HEAD
 Mcu.Pin10=VP_TIM3_VS_ClockSourceINT
 Mcu.Pin2=PA4
 Mcu.Pin3=PA5
@@ -30,6 +42,15 @@ Mcu.Pin7=PA10
 Mcu.Pin8=VP_FATFS_VS_Generic
 Mcu.Pin9=VP_SYS_VS_Systick
 Mcu.PinsNb=11
+=======
+Mcu.Pin2=PA9
+Mcu.Pin3=PA10
+Mcu.Pin4=PB6
+Mcu.Pin5=PB7
+Mcu.Pin6=VP_SYS_VS_Systick
+Mcu.Pin7=VP_TIM3_VS_ClockSourceINT
+Mcu.PinsNb=8
+>>>>>>> 97e53665b505eb3e475580a7474b7829b401767c
 Mcu.ThirdPartyNb=0
 Mcu.UserConstants=
 Mcu.UserName=STM32F411CEUx
@@ -101,7 +122,11 @@ ProjectManager.ToolChainLocation=
 ProjectManager.UAScriptAfterPath=
 ProjectManager.UAScriptBeforePath=
 ProjectManager.UnderRoot=false
+<<<<<<< HEAD
 ProjectManager.functionlistsort=1-SystemClock_Config-RCC-false-HAL-false,2-MX_GPIO_Init-GPIO-false-HAL-true,3-MX_USART1_UART_Init-USART1-false-HAL-true,4-MX_TIM3_Init-TIM3-false-HAL-true,5-MX_USART2_UART_Init-USART2-false-HAL-true,6-MX_SPI1_Init-SPI1-false-HAL-true,7-MX_FATFS_Init-FATFS-false-HAL-false
+=======
+ProjectManager.functionlistsort=1-SystemClock_Config-RCC-false-HAL-false,2-MX_GPIO_Init-GPIO-false-HAL-true,3-MX_USART1_UART_Init-USART1-false-HAL-true,4-MX_TIM3_Init-TIM3-false-HAL-true,5-MX_USART2_UART_Init-USART2-false-HAL-true
+>>>>>>> 97e53665b505eb3e475580a7474b7829b401767c
 RCC.AHBFreq_Value=16000000
 RCC.APB1Freq_Value=16000000
 RCC.APB2Freq_Value=16000000
