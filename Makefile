@@ -144,7 +144,7 @@ CFLAGS += -MMD -MP -MF"$(@:%.o=%.d)" -DDEBUG
 # LDFLAGS
 #######################################
 # link script
-LDSCRIPT = STM32F411CEUx_FLASH.ld
+LDSCRIPT = STM32F411CEUX_FLASH.ld
 
 # libraries
 LIBS = -lc -lm -lnosys 
