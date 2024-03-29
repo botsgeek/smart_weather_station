@@ -28,43 +28,6 @@ error_type_t dht22Init(dht22_t *dht22_object)
     {
         return SYSTEM_NULL_PARAMETER;
     }
-
-    if (dht22_object->config.gpio_port == GPIOA)
-    {
-        __HAL_RCC_GPIOA_CLK_ENABLE();
-    }
-    else if (dht22_object->config.gpio_port == GPIOB)
-    {
-        __HAL_RCC_GPIOB_CLK_ENABLE();
-    }
-    else if (dht22_object->config.gpio_port == GPIOC)
-    {
-        __HAL_RCC_GPIOC_CLK_ENABLE();
-    }
-    else if (dht22_object->config.gpio_port == GPIOD)
-    {
-        __HAL_RCC_GPIOD_CLK_ENABLE();
-    }
-    else if (dht22_object->config.gpio_port == GPIOE)
-    {
-        __HAL_RCC_GPIOE_CLK_ENABLE();
-    }
-    else if (dht22_object->config.gpio_port == GPIOH)
-    {
-        __HAL_RCC_GPIOH_CLK_ENABLE();
-    }
-    else
-    {
-        return SYSTEM_INVALID_PIN_PORT;
-    }
-
-    GPIO_InitTypeDef GPIO_InitStruct = {0};
-
-    GPIO_InitStruct.Pin = dht22_object->config.gpio_pin;
-    GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_OD;
-    GPIO_InitStruct.Pull = GPIO_PULLUP;
-    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_MEDIUM;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
     // set pin high as default
     HAL_GPIO_WritePin(dht22_object->config.gpio_port, dht22_object->config.gpio_pin, GPIO_PIN_SET);
     // set pin high as default
@@ -245,7 +208,6 @@ error_type_t dht22DeInit(dht22_t *dht22_object)
 {
     if (dht22_object)
     {
-        HAL_GPIO_DeInit(dht22_object->config.gpio_port, dht22_object->config.gpio_pin);
         dht22_object->initialized = false;
         return SYSTEM_OK;
     }

@@ -7,9 +7,6 @@ void example()
     /* Initialize the SD card */
   sdcard_config_t sdcard_config = {
     .spi_handle = &hspi1,
-    .cs_port = SD_CS_GPIO_Port, // Set your GPIO port and pin for chip select
-    .cs_pin = SD_CS_Pin,
-    .spi_port = SPI1
   };
 //Create the object
   sdcard_t *sdcard_object = sdcard_create(&sdcard_config);

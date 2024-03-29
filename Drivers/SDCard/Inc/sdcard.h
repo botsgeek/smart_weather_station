@@ -16,9 +16,6 @@ extern "C" {
 typedef struct sdcard_t sdcard_t;
 typedef struct {
     SPI_HandleTypeDef *spi_handle;
-    GPIO_TypeDef *cs_port;
-    uint16_t cs_pin;
-    SPI_TypeDef *spi_port;
 } sdcard_config_t;
 
 typedef struct {
