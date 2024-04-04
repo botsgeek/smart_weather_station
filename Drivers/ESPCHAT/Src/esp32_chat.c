@@ -5,18 +5,6 @@
 #include <at_commands.h>
 #define SERIAL_SEND_TIMEOUT 100
 
-esp32_chat_config_t DEFAULT_ESPCHAT_CONFIG = {
-    .uart_object = NULL,
-    .instance = USART2,
-    .baud = 115200,
-    .word_length = UART_WORDLENGTH_8B,
-    .stop_bit = UART_STOPBITS_1,
-    .parity = UART_PARITY_NONE,
-    .mode = UART_MODE_TX_RX,
-    .hw_flow_ctrl = UART_HWCONTROL_NONE,
-    .oversampling = UART_OVERSAMPLING_16
-
-};
 struct esp32_chat_t
 {
     UART_HandleTypeDef *uart_object;
@@ -29,11 +17,6 @@ error_type_t esp32ChatInit(esp32_chat_t *esp32_chat_object)
     {
         return SYSTEM_NULL_PARAMETER;
     }
-    if (HAL_UART_Init(esp32_chat_object->uart_object) != HAL_OK)
-    {
-        Error_Handler();
-        return SYSTEM_FAILED;
-    }
     esp32_chat_object->initialized = true;
     return SYSTEM_OK;
 }
@@ -45,14 +28,6 @@ esp32_chat_t *esp32ChatCreate(const esp32_chat_config_t *config)
     }
     esp32_chat_t *esp32_chat_object = (esp32_chat_t *)malloc(sizeof(esp32_chat_t));
     esp32_chat_object->uart_object = config->uart_object;
-    esp32_chat_object->uart_object->Instance = config->instance;
-    esp32_chat_object->uart_object->Init.BaudRate = config->baud;
-    esp32_chat_object->uart_object->Init.WordLength = config->word_length;
-    esp32_chat_object->uart_object->Init.StopBits = config->stop_bit;
-    esp32_chat_object->uart_object->Init.Parity = config->parity;
-    esp32_chat_object->uart_object->Init.Mode = config->mode;
-    esp32_chat_object->uart_object->Init.HwFlowCtl = config->hw_flow_ctrl;
-    esp32_chat_object->uart_object->Init.OverSampling = config->oversampling;
     return esp32_chat_object;
 }
 
@@ -60,9 +35,6 @@ error_type_t esp32ChatDeInit(esp32_chat_t *esp32_chat_object)
 {
     if (esp32_chat_object)
     {
-        HAL_StatusTypeDef err = HAL_UART_DeInit(esp32_chat_object->uart_object->Instance);
-        if (err != HAL_OK)
-            return SYSTEM_FAILED;
         esp32_chat_object->initialized = false;
         return SYSTEM_OK;
     }

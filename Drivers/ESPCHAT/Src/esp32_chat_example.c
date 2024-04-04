@@ -1,7 +1,9 @@
 #include <esp32_chat.h>
 #include <common_headers.h>
-esp32_chat_config_t config = DEFAULT_ESPCHAT_CONFIG;
-config.uart_object = &huart2;
+UART_HandleTypeDef huart2;
+esp32_chat_config_t config = {
+    .uart_object = &huart2
+};
 esp32_chat_t *esp32_chat_object = esp32ChatCreate(&config);
 char *message = "AT\n";
 if (!esp32_chat_object)
