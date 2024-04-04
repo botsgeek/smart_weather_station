@@ -4,12 +4,12 @@
 
 void example()
 {
-    /* Initialize the SD card */
-  sdcard_config_t sdcard_config = {
+   sdcard_config_t sdcard_config = {
     .spi_handle = &hspi1,
+   
   };
 //Create the object
-  sdcard_t *sdcard_object = sdcard_create(&sdcard_config);
+  sdcard_t *sdcard_object = sdcardCreate(&sdcard_config);
   if (!sdcard_object) {
     printf("Failed to configure SD card instance\n");
     exit(1);
@@ -33,7 +33,7 @@ void example()
 
   // Get SD card information
   sdcard_info_t sdcard_info;
-  error_type_t result = sdcardGetInfo(&fs, &sdcard_info);
+  error_type_t result = sdcardGetInfo(sdcard_object,&fs, &sdcard_info);
   if (result != SYSTEM_OK) {
     printf("Failed to get SD card information\n");
     exit(1);
@@ -107,6 +107,4 @@ void example()
 
     // Unmount the SD card
   f_mount(NULL, "", 0);
-
-
 }

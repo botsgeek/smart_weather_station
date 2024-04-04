@@ -35,8 +35,7 @@ error_type_t sdcardInit(sdcard_t *sdcard_object) {
     {
         return SYSTEM_NULL_PARAMETER;
     }
-  /* SPI1 parameter configuration*/
-    MX_FATFS_Init();
+
     return SYSTEM_OK;
 }
 
