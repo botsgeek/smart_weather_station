@@ -4,11 +4,13 @@
 
 void example()
 {
+<<<<<<< HEAD
     sdcard_config_t sdcard_config = {
+=======
+   sdcard_config_t sdcard_config = {
+>>>>>>> f182127eb5c8594fc61a66a3d0a94c81ee9f894f
     .spi_handle = &hspi1,
-    .cs_port = SD_CS_GPIO_Port, // Set your GPIO port and pin for chip select
-    .cs_pin = SD_CS_Pin,
-    .spi_port = SPI1
+   
   };
 //Create the object
   sdcard_t *sdcard_object = sdcardCreate(&sdcard_config);
@@ -109,5 +111,8 @@ void example()
 
     // Unmount the SD card
   f_mount(NULL, "", 0);
+<<<<<<< HEAD
 
+=======
+>>>>>>> f182127eb5c8594fc61a66a3d0a94c81ee9f894f
 }
