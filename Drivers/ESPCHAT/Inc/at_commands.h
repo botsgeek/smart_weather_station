@@ -39,6 +39,7 @@
     } while (0)
 #define AT_CWJAP_GET_CMD ("AT+CWJAP?\n")
 #define AT_CWQAP_SET_CMD ("AT+CWQAP\n")
+#define AT_CIFSR_GET_CMD ("AT+CIFSR\n")
 
 #define EXTRA_AT_TERMINATOR_LENGTH 3
 typedef enum

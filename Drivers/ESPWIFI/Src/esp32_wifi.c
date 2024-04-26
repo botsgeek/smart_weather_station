@@ -19,6 +19,7 @@ static char rx_buffer[MESSAGE_SEND_BUFFER_SIZE] = "";
 static char wifi_ssid[MAX_SSID_LENGTH] = "";
 static char wifi_password[MAX_PASSWORD_LENGTH] = "";
 static const char *wifi_pattern = "CWJAP:\"[^\"]*\",";
+static const char *ip_pattern = "\"[0-9]*.[0-9]*.[0-9]*.[0-9]*\"";
 
 static esp32_wifi_t *esp32_wifi_object_static = NULL;
 struct esp32_wifi_t
@@ -64,6 +65,33 @@ static error_type_t checkConnected(esp32_wifi_t *esp32_wifi_object, bool *status
     int match_idx = re_matchp(pattern, rx_buffer, &match_length);
 
     *status = (match_idx != -1) ? true : false;
+    return SYSTEM_OK;
+}
+
+static error_type_t getIpAddress(esp32_wifi_t *esp32_wifi_object, char *ipAddress)
+{
+    error_type_t result;
+    int match_length;
+    tx_buffer[0] = '\0';
+    strcpy(tx_buffer, AT_CIFSR_GET_CMD);
+    memset(rx_buffer, 0, MESSAGE_SEND_BUFFER_SIZE);
+    result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+    if (result != SYSTEM_OK)
+    {
+        return result;
+    }
+    re_t pattern = re_compile(ip_pattern);
+    int match_idx = re_matchp(pattern, rx_buffer, &match_length);
+    if(match_idx == -1)
+    {
+        return SYSTEM_FAILED;
+    }
+    char *end_index = strchr(rx_buffer+match_idx+1,'\"');
+    if(!end_index){
+       return SYSTEM_FAILED; 
+    }
+    size_t ip_size = (int)(end_index-(rx_buffer+match_idx+1));
+    strncpy(ipAddress,rx_buffer+match_idx+1,ip_size);
     return SYSTEM_OK;
 }
 
@@ -199,6 +227,16 @@ error_type_t esp32WifiDisconnect(esp32_wifi_t *esp32_wifi_object)
         return result;
     }
     return SYSTEM_OK;
+}
+error_type_t esp32WifiGetIPAddress(esp32_wifi_t *esp32_wifi_object, char *ip_address_buffer)
+{
+    error_type_t result;
+    result = validate(esp32_wifi_object);
+    if (result != SYSTEM_OK)
+    {
+        return result;
+    }
+    return getIpAddress(esp32_wifi_object,ip_address_buffer);   
 }
 error_type_t esp32WifiIsconnected(esp32_wifi_t *esp32_wifi_object, bool *status)
 {

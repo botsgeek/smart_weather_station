@@ -68,6 +68,14 @@ extern "C"
      */
     error_type_t esp32WifiIsconnected(esp32_wifi_t *esp32_wifi_object, bool *status);
     /**
+     * @brief Get IP Address
+     *
+     * @param esp32_wifi_object
+     * @param ip_address_buffer
+     * @return error_type_t
+     */
+    error_type_t esp32WifiGetIPAddress(esp32_wifi_t *esp32_wifi_object, char *ip_address_buffer);
+    /**
      * @brief Deinitializes wifi object
      *
      * @param esp32_wifi_object
