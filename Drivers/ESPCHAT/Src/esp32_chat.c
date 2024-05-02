@@ -3,13 +3,13 @@
 #include <common_headers.h>
 #include <string.h>
 #include <at_commands.h>
-#define SERIAL_SEND_TIMEOUT 100
-
+#define SERIAL_SEND_TIMEOUT 1000
 struct esp32_chat_t
 {
     UART_HandleTypeDef *uart_object;
     bool initialized;
 };
+
 
 error_type_t esp32ChatInit(esp32_chat_t *esp32_chat_object)
 {
