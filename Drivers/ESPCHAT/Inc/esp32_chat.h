@@ -4,6 +4,13 @@
 #include <common_headers.h>
 #include <stm32f411xe.h>
 #include "stm32f4xx_hal.h"
+
+#define CLEAR_CHAT_BUFFER(x) \
+    do                       \
+    {                        \
+        x[0]='\0';                \
+    } while (0);
+    
 #ifdef __cplusplus
 extern "C"
 {
