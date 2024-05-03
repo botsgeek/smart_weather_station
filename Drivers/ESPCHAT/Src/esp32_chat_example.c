@@ -1,6 +1,10 @@
 #include <esp32_chat.h>
 #include <common_headers.h>
 UART_HandleTypeDef huart2;
+
+void esp32chat_example()
+{
+static char buffer[512];
 esp32_chat_config_t config = {
     .uart_object = &huart2
 };
@@ -17,8 +21,8 @@ if (err != SYSTEM_OK)
     printf("esp chat object init failed\n");
     exit(1);
 }
-
-err = esp32ChatSendReceive(esp32_chat_object, message, buffer, 50);
+esp32_chat_response_t response = {.buffer = buffer, .buffer_size=512};
+err = esp32ChatSendReceive(esp32_chat_object, message, &response);
 if (err != SYSTEM_OK)
 {
     printf("esp chat send received failed,error code is: %d\n", (int)err);
@@ -38,7 +42,7 @@ if (err != SYSTEM_OK)
     exit(1);
 }
 memset(buffer, 0, 50);
-err = esp32ChatSendReceive(esp32_chat_object, message, buffer, 50);
+err = esp32ChatSendReceive(esp32_chat_object, message, &response);
 if (err != SYSTEM_OK)
 {
     printf("esp chat send received failed,error code is: %d\n", (int)err);
@@ -51,7 +55,7 @@ if (err != SYSTEM_OK)
     printf("esp chat deinit failed,error code is: %d\n", (int)err);
     exit(1);
 }
-err = esp32ChatSendReceive(esp32_chat_object, message, buffer, 50);
+err = esp32ChatSendReceive(esp32_chat_object, message,&response);
 if (err == SYSTEM_OK)
 {
     printf("esp chat should not send after deinit");
@@ -63,9 +67,10 @@ if (err != SYSTEM_OK || esp32_chat_object != NULL)
     printf("esp chat destroy failed,error code is: %d\n", (int)err);
     exit(1);
 }
-err = esp32ChatSendReceive(esp32_chat_object, message, buffer, 50);
+err = esp32ChatSendReceive(esp32_chat_object, message, &response);
 if (err == SYSTEM_OK)
 {
     printf("esp chat should not send after destroy");
     exit(1);
+}
 }
