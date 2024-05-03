@@ -11,10 +11,6 @@ static char tx_buffer[MESSAGE_SEND_BUFFER_SIZE] = "";
 static char* http_enum_string[] = {"0","1","2","3"};
 const char* GET_SIZE_AT ="+HTTPGETSIZE:";
 const char* SEND_OK ="SEND OK";
-// static char wifi_ssid[MAX_SSID_LENGTH] = "";
-// static char wifi_password[MAX_PASSWORD_LENGTH] = "";
-// static const char *wifi_pattern = "CWJAP:\"[^\"]*\",";
-// static const char *ip_pattern = "\"[0-9]*.[0-9]*.[0-9]*.[0-9]*\"";
 
 struct esp32_http_t 
 {
@@ -34,7 +30,14 @@ http_request_t DEFAULT_HTTP_REQUEST = {
 
 esp32_http_t *esp32HttpCreate(esp32_chat_t *esp32_chat_object)
 {
+        if(!esp32_chat_object)
+        {
+            return NULL;
+        }
         esp32_http_t *esp32_http_object = (esp32_http_t *)malloc(sizeof(esp32_http_t));
+        if(!esp32_http_object){
+            return NULL;
+        }
         esp32_http_object->esp32_chat_object = esp32_chat_object;
         return esp32_http_object;
 }
@@ -214,8 +217,15 @@ error_type_t esp32HttpGetSize(esp32_http_t *esp32_http_object,char* url,uint32_t
     if(result != SYSTEM_OK){
         return result;
     } 
+
+    // Comment code left here because according to the document
+    // AT + HTTP is supposed to retrieve the Http error code but 
+    // that's not working.  The issue has been logged on the esp-at repo
+
+
+
     // CLEAR_CHAT_BUFFER(tx_buffer);
-    // strcat(tx_buffer,"AT+HTTPCPOST\n");
+    // strcat(tx_buffer,"AT+HTTPCLIENT\n");
     // post_response.timeout = 0;
     // post_response.expected_response = "";
     // result = esp32ChatSendReceive(esp32_http_object->esp32_chat_object,tx_buffer,&post_response);
