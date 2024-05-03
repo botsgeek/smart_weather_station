@@ -27,6 +27,9 @@ esp32_chat_t *esp32ChatCreate(const esp32_chat_config_t *config)
         return NULL;
     }
     esp32_chat_t *esp32_chat_object = (esp32_chat_t *)malloc(sizeof(esp32_chat_t));
+    if(!esp32_chat_object){
+        return NULL;
+    }
     esp32_chat_object->uart_object = config->uart_object;
     return esp32_chat_object;
 }

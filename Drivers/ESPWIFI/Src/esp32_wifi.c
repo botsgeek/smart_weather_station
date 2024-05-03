@@ -98,6 +98,9 @@ esp32_wifi_t *esp32WifiCreate(esp32_chat_t *esp32_chat_object)
     if (!esp32_wifi_object_static)
     {
         esp32_wifi_t *esp32_wifi_object = (esp32_wifi_t *)malloc(sizeof(esp32_wifi_t));
+        if(!esp32_wifi_object){
+            return NULL;
+        }
         esp32_wifi_object->esp32_chat_object = esp32_chat_object;
         esp32_wifi_object_static = esp32_wifi_object;
         return esp32_wifi_object;
