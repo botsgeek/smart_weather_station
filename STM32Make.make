@@ -43,8 +43,10 @@ Core/Src/stm32f4xx_it.c \
 Core/Src/syscalls.c \
 Core/Src/sysmem.c \
 Core/Src/system_stm32f4xx.c \
+Drivers/BME280/Src/bme280_spi.c \
 Drivers/DHT22T/Src/dht22.c \
 Drivers/ESPCHAT/Src/esp32_chat.c \
+Drivers/ESPWIFI/Src/esp32_wifi.c \
 Drivers/SDCard/Src/sdcard.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c \
 Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c \
@@ -69,7 +71,8 @@ FATFS/Target/user_diskio_spi.c \
 Middlewares/Third_Party/FatFs/src/diskio.c \
 Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
-Middlewares/Third_Party/FatFs/src/option/syscall.c
+Middlewares/Third_Party/FatFs/src/option/syscall.c \
+ThirdParty/regex/tiny-regex-c/re.c
 
 
 CPP_SOURCES = \
@@ -142,16 +145,19 @@ AS_INCLUDES = \
 # C includes
 C_INCLUDES =  \
 -ICore/Inc \
+-IDrivers/BME280/Inc \
 -IDrivers/CMSIS/Device/ST/STM32F4xx/Include \
 -IDrivers/CMSIS/Include \
 -IDrivers/DHT22T/Inc \
 -IDrivers/ESPCHAT/Inc \
+-IDrivers/ESPWIFI/Inc \
 -IDrivers/SDCard/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc \
 -IDrivers/STM32F4xx_HAL_Driver/Inc/Legacy \
 -IFATFS/App \
 -IFATFS/Target \
--IMiddlewares/Third_Party/FatFs/src
+-IMiddlewares/Third_Party/FatFs/src \
+-IThirdParty/regex/tiny-regex-c
 
 
 
