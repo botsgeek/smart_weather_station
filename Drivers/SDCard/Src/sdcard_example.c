@@ -4,7 +4,11 @@
 
 void example()
 {
+<<<<<<< HEAD
+    sdcard_config_t sdcard_config = {
+=======
    sdcard_config_t sdcard_config = {
+>>>>>>> f182127eb5c8594fc61a66a3d0a94c81ee9f894f
     .spi_handle = &hspi1,
    
   };
@@ -107,4 +111,8 @@ void example()
 
     // Unmount the SD card
   f_mount(NULL, "", 0);
+<<<<<<< HEAD
+
+=======
+>>>>>>> f182127eb5c8594fc61a66a3d0a94c81ee9f894f
 }
