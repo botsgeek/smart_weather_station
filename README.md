@@ -103,7 +103,7 @@ Before starting to build with docker, first launch the docker desktop software, 
 - Run `bash build.sh clean` , this will clean the build directory by removing the binaries
 - Run `bash build.sh debug` , this will build the project using the Makefile within the project directory
 
-NOTE: If you run the second and third command above and its giving error as below (most especially if you are using windows 10),first run `dos2unix build.sh` before rerunning the commands.
+NOTE: If you run the second and third command above and its giving error as below (most especially if you are using windows 10), first run `dos2unix build.sh` before rerunning the commands.
 
 ![image](https://github.com/botsgeek/smart_weather_station/assets/88656108/d26ffe12-fd6a-4a7a-948e-5d13c787474e)
 
