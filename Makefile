@@ -69,7 +69,8 @@ Middlewares/Third_Party/FatFs/src/ff.c \
 Middlewares/Third_Party/FatFs/src/ff_gen_drv.c \
 Middlewares/Third_Party/FatFs/src/option/syscall.c \
 Drivers/ESPWIFI/Src/esp32_wifi.c \
-ThirdParty/regex/tiny-regex-c/re.c
+ThirdParty/regex/tiny-regex-c/re.c \
+Drivers/ESPHTTP/Src/esp32_http.c \
 
 # ASM sources
 ASM_SOURCES =  \
@@ -141,6 +142,7 @@ C_INCLUDES =  \
 -IFATFS/App \
 -IMiddlewares/Third_Party/FatFs/src \
 -IDrivers/ESPWIFI/Inc \
+-IDrivers/ESPHTTP/Inc \
 -IThirdParty/regex/tiny-regex-c
 
 # compile gcc flags

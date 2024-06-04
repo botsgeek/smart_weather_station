@@ -2,6 +2,10 @@
 #include <common_headers.h>
 #include <esp32_chat.h>
 #include <esp32_wifi.h>
+#define MAX_RETRY_COUNT 3
+UART_HandleTypeDef huart2;
+void wifi_example()
+{
 const char *SSID = "SMC";
 const char *password = "smc12345";
 uint8_t counter = 0;
@@ -112,4 +116,5 @@ if (esp32_wifi_object != NULL)
 {
     printf("esp wifi object not set to null\n");
     exit(1);
+}
 }

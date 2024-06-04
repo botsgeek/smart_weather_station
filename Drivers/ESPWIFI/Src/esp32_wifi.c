@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <re.h>
-#define MESSAGE_SEND_BUFFER_SIZE (255U)
+#define WIFI_MESSAGE_SEND_BUFFER_SIZE (255U)
 #define MAX_SSID_LENGTH (32U)
 #define MAX_PASSWORD_LENGTH (64U)
 #define NO_WIFI_RESPONSE ("AT+CWJAP?\n\r\nOK")
@@ -14,11 +14,12 @@
 #define MINIMUM_PASSWORD_LENGTH (8U)
 #define MAXIMUM_SSID_LENGTH (32U)
 #define MAXIMUM_PASSWORD_LENGTH (63U)
-static char tx_buffer[MESSAGE_SEND_BUFFER_SIZE] = "";
-static char rx_buffer[MESSAGE_SEND_BUFFER_SIZE] = "";
+static char tx_buffer[WIFI_MESSAGE_SEND_BUFFER_SIZE] = "";
+static char rx_buffer[WIFI_MESSAGE_SEND_BUFFER_SIZE] = "";
 static char wifi_ssid[MAX_SSID_LENGTH] = "";
 static char wifi_password[MAX_PASSWORD_LENGTH] = "";
 static const char *wifi_pattern = "CWJAP:\"[^\"]*\",";
+static const char *ip_pattern = "\"[0-9]*.[0-9]*.[0-9]*.[0-9]*\"";
 
 static esp32_wifi_t *esp32_wifi_object_static = NULL;
 struct esp32_wifi_t
@@ -26,36 +27,16 @@ struct esp32_wifi_t
     esp32_chat_t *esp32_chat_object;
     bool initialized;
 };
-static error_type_t sendMessage(esp32_chat_t *esp32_chat_object, char *message)
-{
-    error_type_t result;
-    result = esp32ChatSendReceive(esp32_chat_object, tx_buffer, rx_buffer, MESSAGE_SEND_BUFFER_SIZE);
-    if (result != SYSTEM_OK)
-    {
-        return result;
-    }
-    at_response_type_t res = atCheckResponse(rx_buffer);
-    switch (res)
-    {
-    case AT_BUSY:
-        return SYSTEM_BUSY;
-    case AT_ERROR:
-        return SYSTEM_FAILED;
 
-    case AT_OK:
-        return SYSTEM_OK;
-    default:
-        return SYSTEM_INVALID_RESPONSE;
-    }
-}
 static error_type_t checkConnected(esp32_wifi_t *esp32_wifi_object, bool *status)
 {
     error_type_t result;
     int match_length;
-    tx_buffer[0] = '\0';
+    CLEAR_CHAT_BUFFER(tx_buffer);
     strcpy(tx_buffer, AT_CWJAP_GET_CMD);
-    memset(rx_buffer, 0, MESSAGE_SEND_BUFFER_SIZE);
-    result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+    memset(rx_buffer, 0, WIFI_MESSAGE_SEND_BUFFER_SIZE);
+    esp32_chat_response_t response = {.buffer = rx_buffer,.buffer_size = WIFI_MESSAGE_SEND_BUFFER_SIZE};
+    result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer,&response);
     if (result != SYSTEM_OK)
     {
         return result;
@@ -67,13 +48,42 @@ static error_type_t checkConnected(esp32_wifi_t *esp32_wifi_object, bool *status
     return SYSTEM_OK;
 }
 
+static error_type_t getIpAddress(esp32_wifi_t *esp32_wifi_object, char *ipAddress)
+{
+    error_type_t result;
+    int match_length;
+    CLEAR_CHAT_BUFFER(tx_buffer);
+    strcpy(tx_buffer, AT_CIFSR_GET_CMD);
+    memset(rx_buffer, 0, WIFI_MESSAGE_SEND_BUFFER_SIZE);
+    esp32_chat_response_t response = {.buffer = rx_buffer,.buffer_size = WIFI_MESSAGE_SEND_BUFFER_SIZE};
+    result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer, &response);
+    if (result != SYSTEM_OK)
+    {
+        return result;
+    }
+    re_t pattern = re_compile(ip_pattern);
+    int match_idx = re_matchp(pattern, rx_buffer, &match_length);
+    if(match_idx == -1)
+    {
+        return SYSTEM_FAILED;
+    }
+    char *end_index = strchr(rx_buffer+match_idx+1,'\"');
+    if(!end_index){
+       return SYSTEM_FAILED; 
+    }
+    size_t ip_size = (int)(end_index-(rx_buffer+match_idx+1));
+    strncpy(ipAddress,rx_buffer+match_idx+1,ip_size);
+    return SYSTEM_OK;
+}
+
 static error_type_t checkDisconnected(esp32_wifi_t *esp32_wifi_object, bool *status)
 {
     error_type_t result;
-    tx_buffer[0] = '\0';
+    CLEAR_CHAT_BUFFER(tx_buffer);
     strcpy(tx_buffer, AT_CWJAP_GET_CMD);
-    memset(rx_buffer, 0, MESSAGE_SEND_BUFFER_SIZE);
-    result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+    memset(rx_buffer, 0, WIFI_MESSAGE_SEND_BUFFER_SIZE);
+    esp32_chat_response_t response = {.buffer = rx_buffer,.buffer_size = WIFI_MESSAGE_SEND_BUFFER_SIZE};
+    result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer, &response);
     if (result != SYSTEM_OK)
     {
         return result;
@@ -88,6 +98,9 @@ esp32_wifi_t *esp32WifiCreate(esp32_chat_t *esp32_chat_object)
     if (!esp32_wifi_object_static)
     {
         esp32_wifi_t *esp32_wifi_object = (esp32_wifi_t *)malloc(sizeof(esp32_wifi_t));
+        if(!esp32_wifi_object){
+            return NULL;
+        }
         esp32_wifi_object->esp32_chat_object = esp32_chat_object;
         esp32_wifi_object_static = esp32_wifi_object;
         return esp32_wifi_object;
@@ -106,16 +119,17 @@ error_type_t esp32WifiInit(esp32_wifi_t *esp32_wifi_object)
     {
         return SYSTEM_INVALID_PARAMETER;
     }
-    tx_buffer[0] = '\0';
+    CLEAR_CHAT_BUFFER(tx_buffer);
     AT_CWMODE_SET_CMD(tx_buffer, WIFI_NULL_MODE);
-    result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+    esp32_chat_response_t response = {.buffer = rx_buffer,.buffer_size = WIFI_MESSAGE_SEND_BUFFER_SIZE};
+    result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer,&response);
     if (result != SYSTEM_OK)
     {
         return result;
     }
-    tx_buffer[0] = '\0';
+    CLEAR_CHAT_BUFFER(tx_buffer);
     AT_CWMODE_SET_CMD(tx_buffer, WIFI_STATION_MODE);
-    result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+    result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer,&response);
     if (result != SYSTEM_OK)
     {
         return result;
@@ -159,13 +173,14 @@ error_type_t esp32WifiConnect(esp32_wifi_t *esp32_wifi_object, char *SSID, char 
         memcpy(wifi_password, password, strlen(password) + 1);
         return SYSTEM_OK;
     }
-    tx_buffer[0] = '\0';
+    CLEAR_CHAT_BUFFER(tx_buffer);
     AT_CWJAP_SET_CMD(tx_buffer, SSID, password);
-    result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+    esp32_chat_response_t response = {.buffer = rx_buffer,.buffer_size = WIFI_MESSAGE_SEND_BUFFER_SIZE};
+    result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer,&response);
     if (result == SYSTEM_FAILED)
     {
         HAL_Delay(IN_BETWEEN_ACTION_DELAY);
-        result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+        result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer, &response);
     }
     if (result == SYSTEM_OK)
     {
@@ -191,14 +206,25 @@ error_type_t esp32WifiDisconnect(esp32_wifi_t *esp32_wifi_object)
     {
         return SYSTEM_OK;
     }
-    tx_buffer[0] = '\0';
+    CLEAR_CHAT_BUFFER(tx_buffer);
     strcpy(tx_buffer, AT_CWQAP_SET_CMD);
-    result = sendMessage(esp32_wifi_object->esp32_chat_object, tx_buffer);
+    esp32_chat_response_t response = {.buffer = rx_buffer,.buffer_size = WIFI_MESSAGE_SEND_BUFFER_SIZE};
+    result = esp32ChatSendReceive(esp32_wifi_object->esp32_chat_object, tx_buffer, &response);
     if (result != SYSTEM_OK)
     {
         return result;
     }
     return SYSTEM_OK;
+}
+error_type_t esp32WifiGetIPAddress(esp32_wifi_t *esp32_wifi_object, char *ip_address_buffer)
+{
+    error_type_t result;
+    result = validate(esp32_wifi_object);
+    if (result != SYSTEM_OK)
+    {
+        return result;
+    }
+    return getIpAddress(esp32_wifi_object,ip_address_buffer);   
 }
 error_type_t esp32WifiIsconnected(esp32_wifi_t *esp32_wifi_object, bool *status)
 {
