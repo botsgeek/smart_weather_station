@@ -98,10 +98,12 @@ start debugging
 
 
 ## Build with docker
-
+Before starting to build with docker, first launch the docker desktop software, then follow the process below
 - Run `bash generate_docker.sh` , this will build the docker image
 - Run `bash build.sh clean` , this will clean the build directory by removing the binaries
 - Run `bash build.sh debug` , this will build the project using the Makefile within the project directory
+
+NOTE:If you run the second and third command above and its giving error (most especially if you are using windows 10), use "**dos2unix build.sh**" instead of "**bash build.sh**"
 
 ### Debugging with the image generated from Docker
 
