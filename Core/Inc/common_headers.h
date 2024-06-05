@@ -31,6 +31,7 @@ extern "C"
         SYSTEM_BUSY,
         SYSTEM_OPERATION_FAILED,
         SYSTEM_INVALID_RESPONSE,
+        SYSTEM_COMMS_ERROR,
     } error_type_t;
     extern TIM_HandleTypeDef htim3;
     extern UART_HandleTypeDef huart1;
